@@ -31,22 +31,27 @@
     <h1>Welcome to our Book Reservation App</h1>
 </header>
 <main>
-    <form action="/" method="POST">
-        <h2>Filter books:</h2>
-        <label>Title:</label>
-        <input type="text" name="text"><br/>
-        <label>Rating:</label>
-        <input type="number" name="rating" min="0" max="5"><br/>
-        <input type="submit" value="Filter">
-    </form>
     <form action="/bookReservation" method="POST">
         <h2>Choose a book:</h2>
-        <ul>
-            <li th:each="book: ${books}" class="book-option">
-                <input type="radio" name="bookTitle" th:value="${book.title}" required>
-                <label th:text="|Title: ${book.title}, Genre: ${book.genre}, Rating: ${book.averageRating}|"></label>
-            </li>
-        </ul>
+
+        <div th:each="book : ${books}">
+            <div class="book-entry">
+                <input type="radio" class="book-option" name="bookTitle" th:value="${book.getTitle()}"
+                       th:text="|Title: ${book.getTitle()}, Genre: ${book.getGenre()}, Rating: ${book.getAverageRating()}, Author: ${book.getAuthor().getName()} ${book.getAuthor().getSurname()}|"/>
+
+                <button type="submit" name="edit" th:formaction="@{'/books/book-form/' + ${book.getId()}}" formmethod="get" formnovalidate>
+                    Edit
+                </button>
+
+                <button type="submit" name="delete" th:formaction="@{'/books/delete/' + ${book.getId()}}" formmethod="post" formnovalidate>
+                    Delete
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" name="addBook" formaction="/books/book-form" formmethod="get" formnovalidate>
+            Add Book
+        </button>
 
         <h2>Enter your information:</h2>
         <label>Your Name:</label>
