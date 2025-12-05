@@ -1,7 +1,7 @@
 package mk.ukim.finki.wp.lab.service.impl;
 
 import mk.ukim.finki.wp.lab.model.Book;
-import mk.ukim.finki.wp.lab.repository.BookRepository;
+import mk.ukim.finki.wp.lab.repository.jpa.BookRepository;
 import mk.ukim.finki.wp.lab.service.AuthorService;
 import mk.ukim.finki.wp.lab.service.BookService;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> searchBooks(String text, Double rating) {
-        return bookRepository.searchBooks(text, rating);
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getTitle().contains(text) && book.getAverageRating() >= rating)
+                .toList();
     }
 
     @Override
@@ -51,6 +53,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Long id) {
-        bookRepository.delete(id);
+        bookRepository.deleteById(id);
     }
 }
